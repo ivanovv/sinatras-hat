@@ -6,19 +6,19 @@ module Sinatra
     class Response
       attr_reader :maker
       
-      delegate :model, :resource_path, :to => :maker
+      delegate :options, :model, :resource_path, :to => :maker
       
       def initialize(maker, request)
         @maker = maker
         @request = request
       end
       
-      def render(action, options={})
+      def render(action, render_options={})
         begin
-          options.each { |sym, value| @request.send(sym, value) }
-          @request.erb "#{maker.prefix}/#{action}".to_sym
+          render_options.each { |sym, value| @request.send(sym, value) }
+          @request.send(options[:mounted_template_engine], "#{maker.prefix}/#{action}".to_sym)          
         rescue Errno::ENOENT
-          no_template! "Can't find #{File.expand_path(File.join(views, action.to_s))}.erb"
+          no_template! "Can't find #{File.expand_path(File.join(views, action.to_s))}.#{options[:mounted_template_engine].to_s}"
         end
       end
       

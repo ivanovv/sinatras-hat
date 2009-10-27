@@ -57,6 +57,9 @@ module Sinatra
       
       option_setter :format
       
+      # the template engine to use for the mounted actions
+      option_setter :mounted_template_engine
+      
       def initialize(klass, overrides={})
         @klass = klass
         options.merge!(overrides)
@@ -124,6 +127,7 @@ module Sinatra
           :record => proc { |model, params| model.send("find_by_#{to_param}", params[:id]) },
           :protect => [ ],
           :formats => { },
+          :mounted_template_engine => :erb,
           :to_param => :id,
           :credentials => { :username => 'username', :password => 'password', :realm => "The App" },
           :authenticator => proc { |username, password| [username, password] == [:username, :password].map(&credentials.method(:[])) }
