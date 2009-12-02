@@ -29,9 +29,6 @@ class Object
     module InstanceExecHelper; end
     include InstanceExecHelper
     def instance_exec(*args, &block)
-      if defined? instance_exec then
-         instance_exec(*args, &block)
-      end
       begin
         old_critical, Thread.critical = Thread.critical, true
         n = 0
